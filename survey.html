@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RosterDay — Volunteer coordination survey</title>
+<meta name="description" content="A three-minute survey for grassroots football clubs about how volunteer rostering actually works." />
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<!-- ============================================================
+     ROSTERDAY — SURVEY
+     ------------------------------------------------------------
+     Two parts, same as the Pagio method:
+       1. CONFIG (bottom of file) — endpoint, copy, and every
+          question. This is the only block you edit.
+       2. Structure + CSS + renderer — leave alone.
+
+     BEFORE GOING LIVE: paste your Apps Script /exec URL into
+     CONFIG.endpoint. Until you do, the form runs in preview mode
+     and won't send anything.
+     ============================================================ -->
+
+<style>
+  :root{
+    /* RosterDay tokens */
+    --teal:#1F7A8C;
+    --teal-deep:#155562;
+    --teal-soft:#E8F1F3;
+    --ivory:#F7F6F2;
+    --cream:#FBF9F4;
+    --ink:#0E1F26;
+    --ink-soft:#1F2F36;
+    --pewter:#74808A;
+    --pewter-deep:#4F5961;
+    --fog:#E4E7E8;
+    --fog-deep:#D2D7D9;
+    --sun:#F2B544;
+    --sun-soft:#FCEFD4;
+    --sun-deep:#9A6E12;
+    --green:#4FA67A;
+    --green-soft:#E1EFE6;
+    --coral:#F08A7E;
+    --coral-soft:#FBE3DF;
+    --coral-deep:#B5544A;
+
+    --font-display:"Inter Tight", system-ui, sans-serif;
+    --font-body:"Inter", system-ui, sans-serif;
+
+    --r-sm:6px; --r-md:8px; --r-lg:12px; --r-brand:14px; --r-xl:16px; --r-pill:999px;
+    --shadow-1:0 1px 2px rgba(14,31,38,.06);
+    --shadow-2:0 4px 14px rgba(14,31,38,.08);
+    --maxw:720px;
+    --pad:clamp(1.25rem, 5vw, 2.5rem);
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;background:var(--ivory);color:var(--ink);
+    font-family:var(--font-body);font-size:1rem;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    display:flex;flex-direction:column;min-height:100vh;
+  }
+  a{color:var(--teal);}
+
+  .wrap{width:100%;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad);}
+
+  /* ---- masthead ---- */
+  .masthead{padding-block:2rem 1.25rem;}
+  .logo{display:flex;align-items:center;gap:.65rem;text-decoration:none;color:inherit;}
+  .logo .tile{
+    width:34px;height:34px;border-radius:var(--r-lg);background:var(--teal-deep);
+    display:flex;align-items:center;justify-content:center;flex:none;
+  }
+  .logo .tile svg{width:18px;height:18px;}
+  .logo .name{font-family:var(--font-display);font-weight:700;font-size:1.2rem;letter-spacing:-.02em;}
+  .logo .name span{color:var(--pewter);}
+
+  /* ---- progress ---- */
+  .progress{padding-top:clamp(2rem,6vw,3rem);}
+  .progress .bar{display:flex;gap:6px;margin-top:.55rem;}
+  .progress .seg{flex:1;height:4px;border-radius:var(--r-pill);background:var(--fog);transition:background .3s ease;}
+  .progress .seg.done{background:var(--teal);}
+  .progress .meta{
+    display:flex;justify-content:space-between;align-items:baseline;gap:1rem;
+    font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  }
+  .progress .meta .step{color:var(--pewter);}
+  .progress .meta .count{color:var(--teal);letter-spacing:.06em;}
+
+  /* ---- head ---- */
+  main{flex:1 0 auto;}
+  .head{padding-block:clamp(1.75rem,5vw,2.75rem) 0;}
+  .head h1{
+    font-family:var(--font-display);font-weight:700;
+    font-size:clamp(1.9rem,1.4rem + 2vw,2.6rem);line-height:1.12;letter-spacing:-.02em;margin:0;
+  }
+  .head p{margin:.85rem 0 0;color:var(--pewter-deep);font-size:1.05rem;max-width:46ch;}
+  .head .time{
+    display:inline-flex;align-items:center;gap:.5rem;margin-top:1.1rem;
+    background:var(--teal-soft);color:var(--teal-deep);
+    font-size:.82rem;font-weight:600;padding:.4rem .85rem;border-radius:var(--r-pill);
+  }
+
+  /* ---- steps ---- */
+  .step-head{padding-block:1.5rem 0;}
+  .step-head h2{
+    font-family:var(--font-display);font-weight:700;
+    font-size:clamp(1.5rem,1.2rem + 1.2vw,1.9rem);letter-spacing:-.018em;margin:0;
+  }
+  .step-head p{margin:.5rem 0 0;color:var(--pewter);font-size:.98rem;}
+
+  /* ---- questions ---- */
+  .q{
+    background:#fff;border:1px solid var(--fog);border-radius:var(--r-xl);
+    padding:clamp(1.25rem,4vw,1.6rem);margin-top:1.1rem;box-shadow:var(--shadow-1);
+  }
+  .q.invalid{border-color:var(--coral);background:#fff;}
+  .q > .label{
+    display:block;font-family:var(--font-display);font-weight:600;
+    font-size:1.08rem;line-height:1.35;letter-spacing:-.008em;color:var(--ink);
+  }
+  .q .req{color:var(--coral-deep);font-weight:500;}
+  .q .hint{margin:.35rem 0 0;color:var(--pewter);font-size:.88rem;}
+  .q .opts{margin-top:1rem;display:grid;gap:.4rem;}
+
+  .opt{
+    display:flex;align-items:flex-start;gap:.75rem;
+    padding:.7rem .85rem;border:1px solid var(--fog);border-radius:var(--r-lg);
+    cursor:pointer;transition:border-color .15s ease, background .15s ease;
+    font-size:.97rem;line-height:1.45;
+  }
+  .opt:hover{border-color:var(--teal);background:var(--cream);}
+  .opt input{
+    appearance:none;-webkit-appearance:none;margin:.25rem 0 0;flex:none;
+    width:18px;height:18px;border:1.5px solid var(--fog-deep);background:#fff;
+    cursor:pointer;transition:border-color .15s ease, background .15s ease;
+  }
+  .opt input[type="radio"]{border-radius:50%;}
+  .opt input[type="checkbox"]{border-radius:var(--r-sm);}
+  .opt input:checked{border-color:var(--teal);background:var(--teal);}
+  .opt input[type="radio"]:checked{box-shadow:inset 0 0 0 3.5px #fff;}
+  .opt input[type="checkbox"]:checked{
+    background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+    background-size:13px;background-position:center;background-repeat:no-repeat;
+  }
+  .opt input:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+  .opt.checked{border-color:var(--teal);background:var(--teal-soft);}
+  .opt.locked{opacity:.45;cursor:not-allowed;}
+  .opt.locked:hover{border-color:var(--fog);background:#fff;}
+
+  .opt .other-in{
+    flex:1;min-width:0;font-family:var(--font-body);font-size:.95rem;color:var(--ink);
+    border:none;border-bottom:1px solid var(--fog-deep);background:transparent;
+    padding:0 0 .2rem;
+  }
+  .opt .other-in:focus{outline:none;border-bottom-color:var(--teal);}
+
+  .q .cap{
+    margin-top:.7rem;font-size:.82rem;font-weight:600;color:var(--sun-deep);
+    background:var(--sun-soft);display:none;padding:.35rem .7rem;border-radius:var(--r-pill);
+  }
+  .q .cap.show{display:inline-block;}
+
+  .q input[type="text"].free,
+  .q input[type="email"].free,
+  .q textarea.free{
+    width:100%;margin-top:1rem;font-family:var(--font-body);font-size:1rem;color:var(--ink);
+    background:var(--cream);border:1.5px solid var(--fog);border-radius:var(--r-lg);
+    padding:.75rem .85rem;transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .q textarea.free{min-height:120px;resize:vertical;line-height:1.55;}
+  .q .free:focus{
+    outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(31,122,140,.15);background:#fff;
+  }
+  .q .err{
+    margin:.7rem 0 0;color:var(--coral-deep);font-size:.88rem;font-weight:500;display:none;
+  }
+  .q.invalid .err{display:block;}
+
+  /* ---- nav ---- */
+  .nav{
+    display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;
+    padding-block:1.75rem clamp(2.5rem,6vw,4rem);
+  }
+  .btn{
+    font-family:var(--font-body);font-size:1rem;font-weight:600;
+    padding:.8rem 1.5rem;border-radius:var(--r-lg);border:1.5px solid transparent;
+    cursor:pointer;transition:background .15s ease, transform .15s ease, border-color .15s ease;
+  }
+  .btn-primary{background:var(--teal-deep);color:#fff;}
+  .btn-primary:hover{background:var(--teal);transform:translateY(-1px);}
+  .btn-ghost{background:#fff;color:var(--ink-soft);border-color:var(--fog-deep);}
+  .btn-ghost:hover{border-color:var(--pewter);}
+  .btn:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+  .btn:disabled{opacity:.55;cursor:default;transform:none;}
+  .nav .note{color:var(--pewter);font-size:.85rem;margin:0;}
+
+  /* ---- done / error ---- */
+  .done{
+    background:var(--teal-deep);color:#fff;border-radius:var(--r-xl);
+    padding:clamp(1.75rem,5vw,2.75rem);margin-block:clamp(1.5rem,5vw,3rem);
+  }
+  .done h2{font-family:var(--font-display);font-weight:700;font-size:1.7rem;letter-spacing:-.018em;margin:0;}
+  .done p{margin:.75rem 0 0;color:rgba(255,255,255,.82);}
+  .sendfail{
+    background:var(--coral-soft);border:1px solid var(--coral);color:var(--coral-deep);
+    border-radius:var(--r-lg);padding:.9rem 1rem;margin-top:1rem;font-size:.92rem;display:none;
+  }
+  .sendfail.show{display:block;}
+
+  /* ---- footer ---- */
+  .foot{
+    flex-shrink:0;border-top:1px solid var(--fog);
+    padding-block:1.5rem 2.5rem;font-size:.85rem;color:var(--pewter);
+    display:flex;flex-wrap:wrap;gap:.4rem 1.5rem;justify-content:space-between;
+  }
+  .foot a{text-decoration:none;font-weight:500;}
+  .foot a:hover{text-decoration:underline;}
+
+  [hidden]{display:none !important;}
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important;}
+    .btn-primary:hover{transform:none;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="wrap masthead">
+    <a class="logo" href="/">
+      <span class="tile" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="6.3" cy="7" r="1.5" fill="#F7F6F2"/>
+          <rect x="9.6" y="5.8" width="8.4" height="2.4" rx="1.2" fill="#F7F6F2"/>
+          <rect x="4.8" y="10.8" width="13.2" height="2.4" rx="1.2" fill="#F7F6F2"/>
+          <rect x="4.8" y="15.8" width="7.4" height="2.4" rx="1.2" fill="#5DA0AD"/>
+        </svg>
+      </span>
+      <span class="name">Roster<span>Day</span></span>
+    </a>
+  </div>
+
+  <main class="wrap">
+
+    <section class="head" id="intro">
+      <h1 id="intro-title"></h1>
+      <p id="intro-lede"></p>
+      <span class="time" id="intro-time"></span>
+    </section>
+
+    <form id="survey" novalidate>
+      <div class="progress" id="progress">
+        <div class="meta">
+          <span class="step" id="step-label"></span>
+          <span class="count" id="step-count"></span>
+        </div>
+        <div class="bar" id="bar"></div>
+      </div>
+
+      <div class="step-head" id="step-head">
+        <h2 id="step-title"></h2>
+        <p id="step-intro"></p>
+      </div>
+
+      <div id="questions"></div>
+
+      <div class="nav">
+        <button type="button" class="btn btn-ghost" id="back" hidden>Back</button>
+        <button type="button" class="btn btn-primary" id="next"></button>
+        <p class="note" id="nav-note"></p>
+      </div>
+    </form>
+
+    <section class="done" id="done" hidden>
+      <h2 id="done-title"></h2>
+      <p id="done-body"></p>
+    </section>
+
+    <div class="sendfail" id="sendfail"></div>
+
+  </main>
+
+  <footer class="wrap foot">
+    <span id="foot-left"></span>
+    <a id="foot-right" href="#"></a>
+  </footer>
+
+<script>
+/* ===========================================================
+   CONFIG — the only block you edit.
+   =========================================================== */
+const CONFIG = {
+
+  /* Paste your Apps Script Web App URL here (ends in /exec).
+     Leave empty to run in preview mode — nothing gets sent. */
+  endpoint: "https://script.google.com/macros/s/AKfycbzeZVx6oNskSF6Jt-nHzWfoMbbkA_vTrixX4t2TWGB90thVRhIbAF0OzdfaYo28pTk6/exec",
+
+  contactEmail: "hello@rosterday.com.au",
+
+  intro: {
+    title: "How does your club actually roster volunteers?",
+    lede: "We're talking to grassroots football clubs across NSW about how volunteer rostering really works — what's a pain, what you've tried, what you'd change. Your answers shape what gets built.",
+    time: "About 3 minutes · 14 questions"
+  },
+
+  done: {
+    title: "That's it — thank you.",
+    body: "Your answers are in. If you asked for the summary, we'll send it through once we've heard from enough clubs."
+  },
+
+  footer: {
+    left: "© 2026 RosterDay · Currently in development",
+    right: "hello@rosterday.com.au"
+  },
+
+  steps: [
+    {
+      title: "Your club",
+      intro: "First, a bit about who you are and what your club runs.",
+      questions: [
+        {
+          id: "q1",
+          type: "radio",
+          label: "Are you currently involved in organising volunteers, staffing, or operations for a grassroots football club?",
+          required: true,
+          options: [
+            "Yes, I regularly organise volunteers/staffing",
+            "Yes, I occasionally help organise volunteers/staffing",
+            "I'm involved in club leadership but not volunteer coordination",
+            "No"
+          ]
+        },
+        {
+          id: "q2",
+          type: "checkbox",
+          label: "What is your role at the club?",
+          hint: "Select all that apply.",
+          required: true,
+          options: [
+            "President / Chairperson",
+            "Secretary",
+            "Treasurer",
+            "Registrar / Administrator",
+            "Volunteer Coordinator",
+            "Team / Age Coordinator",
+            "Committee Member",
+            "Coach / Manager",
+            "Event Coordinator"
+          ],
+          other: true
+        },
+        {
+          id: "q4",
+          type: "radio",
+          label: "Approximately how many active volunteers or committee helpers does your club rely on each season?",
+          required: true,
+          options: ["Fewer than 10", "10–25", "26–50", "51–100", "100+"]
+        },
+        {
+          id: "q5",
+          type: "checkbox",
+          label: "What kinds of club activities require volunteers or staffing?",
+          hint: "Select all that apply.",
+          required: true,
+          options: [
+            "Weekly sporting rounds / match days",
+            "Gala days / tournaments",
+            "Presentation days",
+            "Fundraising events",
+            "Working bees / maintenance",
+            "Canteen / BBQ / gate duty",
+            "Registration days",
+            "Committee meetings / admin support"
+          ],
+          other: true
+        },
+        {
+          id: "q6",
+          type: "radio",
+          label: "How often are volunteers needed for club activities?",
+          required: true,
+          options: ["Weekly", "Fortnightly", "Monthly", "Only for special events", "Rarely"],
+          other: true
+        }
+      ]
+    },
+
+    {
+      title: "How it works now",
+      intro: "Now the current setup — tools, habits, and where it falls over.",
+      questions: [
+        {
+          id: "q7",
+          type: "checkbox",
+          label: "How does your club currently organise volunteers and duty rosters?",
+          hint: "Select all that apply.",
+          required: true,
+          options: [
+            "Spreadsheets",
+            "Email",
+            "SMS / text messages",
+            "WhatsApp",
+            "Facebook Messenger / group chat",
+            "Team app / club app",
+            "Sign-up forms (Google Forms, SignUpGenius, etc.)",
+            "Dedicated roster/scheduling software",
+            "Phone calls",
+            "Pen & paper / manual process"
+          ],
+          other: true
+        },
+        {
+          id: "q8",
+          type: "radio",
+          label: "How are volunteers usually assigned to duties?",
+          required: true,
+          options: [
+            "Committee manually assigns people",
+            "Volunteers nominate themselves",
+            "A mix of assigning and self-selection",
+            "Mostly informal / ad hoc",
+            "Depends on the event"
+          ],
+          other: true
+        },
+        {
+          id: "q9",
+          type: "checkbox",
+          label: "What are the biggest challenges your club faces when organising volunteers?",
+          hint: "Pick your top 3.",
+          required: true,
+          maxSelect: 3,
+          options: [
+            "Finding enough volunteers",
+            "The same people always helping",
+            "Last-minute cancellations / no-shows",
+            "Chasing confirmations or responses",
+            "Communicating roster changes",
+            "Knowing who is available",
+            "Creating rosters takes too much time",
+            "Keeping track of who has helped",
+            "Volunteers forgetting shifts",
+            "Poor visibility across events",
+            "Too many tools/messages to manage",
+            "Volunteer burnout"
+          ],
+          other: true
+        },
+        {
+          id: "q10",
+          type: "radio",
+          label: "Roughly how much time does your club spend organising volunteers for a typical week?",
+          required: true,
+          options: ["Less than 1 hour", "1–3 hours", "4–7 hours", "8–15 hours", "15+ hours", "Unsure"]
+        },
+        {
+          id: "q11",
+          type: "textarea",
+          label: "If you could improve one thing about volunteer coordination at your club, what would it be?",
+          required: true,
+          placeholder: "One sentence is plenty — but say as much as you like."
+        }
+      ]
+    },
+
+    {
+      title: "Staying in touch",
+      intro: "Last few. Your email is only used for what you tick below.",
+      questions: [
+        {
+          id: "q12",
+          type: "radio",
+          label: "Would you be interested in receiving a summary of what grassroots football clubs told us in this survey?",
+          required: true,
+          options: ["Yes", "No"]
+        },
+        {
+          id: "q13",
+          type: "radio",
+          label: "We may explore practical ways to help clubs reduce admin and improve volunteer coordination in future. Would you like to hear about anything useful we develop or pilot, at no cost?",
+          required: true,
+          options: ["Yes", "No"]
+        },
+        {
+          id: "q14",
+          type: "email",
+          label: "What's the best contact email?",
+          hint: "We'll only use it for what you ticked above. No lists, no spam.",
+          required: true,
+          placeholder: "you@yourclub.com.au",
+          showIf: { any: [{ id: "q12", is: "Yes" }, { id: "q13", is: "Yes" }] }
+        },
+        {
+          id: "q15",
+          type: "text",
+          label: "Club name",
+          hint: "Optional — helps us avoid counting the same club twice.",
+          required: false,
+          placeholder: "e.g. Strathfield Strikers FC"
+        }
+      ]
+    }
+  ]
+};
+
+/* ===========================================================
+   RENDERER — generic. No need to edit per survey.
+   =========================================================== */
+(function () {
+  const answers = {};
+  let stepIndex = 0;
+
+  const el = (id) => document.getElementById(id);
+  const qBox = el("questions");
+
+  /* ---- static copy ---- */
+  el("intro-title").textContent = CONFIG.intro.title;
+  el("intro-lede").textContent = CONFIG.intro.lede;
+  el("intro-time").textContent = CONFIG.intro.time;
+  el("done-title").textContent = CONFIG.done.title;
+  el("done-body").textContent = CONFIG.done.body;
+  el("foot-left").textContent = CONFIG.footer.left;
+  el("foot-right").textContent = CONFIG.footer.right;
+  el("foot-right").href = "mailto:" + CONFIG.contactEmail;
+
+  /* ---- progress segments ---- */
+  const bar = el("bar");
+  CONFIG.steps.forEach(() => {
+    const s = document.createElement("span");
+    s.className = "seg";
+    bar.appendChild(s);
+  });
+
+  function paintProgress() {
+    [...bar.children].forEach((s, i) => s.classList.toggle("done", i <= stepIndex));
+    el("step-label").textContent = CONFIG.steps[stepIndex].title;
+    el("step-count").textContent = "Step " + (stepIndex + 1) + " of " + CONFIG.steps.length;
+  }
+
+  /* ---- visibility rules ---- */
+  function visible(q) {
+    if (!q.showIf) return true;
+    const rules = q.showIf.any || [];
+    return rules.some((r) => answers[r.id] === r.is);
+  }
+
+  function refreshVisibility() {
+    CONFIG.steps[stepIndex].questions.forEach((q) => {
+      const node = document.getElementById("box-" + q.id);
+      if (!node) return;
+      const show = visible(q);
+      node.hidden = !show;
+      if (!show) {
+        delete answers[q.id];
+        node.classList.remove("invalid");
+        node.querySelectorAll("input, textarea").forEach((i) => {
+          if (i.type === "checkbox" || i.type === "radio") i.checked = false;
+          else i.value = "";
+        });
+        node.querySelectorAll(".opt").forEach((o) => o.classList.remove("checked"));
+      }
+    });
+  }
+
+  /* ---- collect a checkbox group's value ---- */
+  function readGroup(q) {
+    const node = document.getElementById("box-" + q.id);
+    const picked = [];
+    node.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+      if (!cb.checked) return;
+      if (cb.dataset.other === "1") {
+        const txt = node.querySelector(".other-in").value.trim();
+        if (txt) picked.push(txt);
+      } else {
+        picked.push(cb.value);
+      }
+    });
+    return picked;
+  }
+
+  /* ---- enforce max selections ---- */
+  function enforceCap(q) {
+    if (!q.maxSelect) return;
+    const node = document.getElementById("box-" + q.id);
+    const boxes = [...node.querySelectorAll('input[type="checkbox"]')];
+    const count = boxes.filter((b) => b.checked).length;
+    const atCap = count >= q.maxSelect;
+    boxes.forEach((b) => {
+      const lock = atCap && !b.checked;
+      b.disabled = lock;
+      b.closest(".opt").classList.toggle("locked", lock);
+    });
+    const cap = node.querySelector(".cap");
+    cap.classList.toggle("show", atCap);
+    cap.textContent = "That's your top " + q.maxSelect + ". Untick one to swap it.";
+  }
+
+  /* ---- build one question ---- */
+  function buildQuestion(q) {
+    const box = document.createElement("div");
+    box.className = "q";
+    box.id = "box-" + q.id;
+
+    const label = document.createElement("span");
+    label.className = "label";
+    label.textContent = q.label;
+    if (q.required) {
+      const star = document.createElement("span");
+      star.className = "req";
+      star.textContent = " *";
+      label.appendChild(star);
+    }
+    box.appendChild(label);
+
+    if (q.hint) {
+      const hint = document.createElement("p");
+      hint.className = "hint";
+      hint.textContent = q.hint;
+      box.appendChild(hint);
+    }
+
+    if (q.type === "radio" || q.type === "checkbox") {
+      const opts = document.createElement("div");
+      opts.className = "opts";
+      opts.setAttribute("role", "group");
+
+      const rows = q.options.slice();
+      if (q.other) rows.push("__other__");
+
+      rows.forEach((text) => {
+        const isOther = text === "__other__";
+        const row = document.createElement("label");
+        row.className = "opt";
+
+        const input = document.createElement("input");
+        input.type = q.type;
+        input.name = q.id;
+        input.value = isOther ? "" : text;
+        if (isOther) input.dataset.other = "1";
+
+        const span = document.createElement("span");
+        span.textContent = isOther ? "Other:" : text;
+
+        row.appendChild(input);
+        row.appendChild(span);
+
+        if (isOther) {
+          const free = document.createElement("input");
+          free.type = "text";
+          free.className = "other-in";
+          free.setAttribute("aria-label", "Other — please specify");
+          free.addEventListener("input", () => {
+            if (free.value.trim() && !input.checked) {
+              input.checked = true;
+              row.classList.add("checked");
+              if (q.type === "radio") {
+                opts.querySelectorAll(".opt").forEach((o) => {
+                  if (o !== row) o.classList.remove("checked");
+                });
+              }
+              enforceCap(q);
+            }
+            box.classList.remove("invalid");
+          });
+          row.appendChild(free);
+        }
+
+        input.addEventListener("change", () => {
+          if (q.type === "radio") {
+            opts.querySelectorAll(".opt").forEach((o) => o.classList.remove("checked"));
+          }
+          row.classList.toggle("checked", input.checked);
+          box.classList.remove("invalid");
+
+          if (q.type === "radio") {
+            const otherIn = opts.querySelector(".other-in");
+            answers[q.id] = input.dataset.other === "1"
+              ? (otherIn ? otherIn.value.trim() : "")
+              : input.value;
+            refreshVisibility();
+          } else {
+            enforceCap(q);
+            answers[q.id] = readGroup(q).join(", ");
+          }
+        });
+
+        opts.appendChild(row);
+      });
+
+      box.appendChild(opts);
+
+      if (q.maxSelect) {
+        const cap = document.createElement("span");
+        cap.className = "cap";
+        box.appendChild(cap);
+      }
+    } else {
+      const field = q.type === "textarea"
+        ? document.createElement("textarea")
+        : document.createElement("input");
+      if (q.type !== "textarea") field.type = q.type === "email" ? "email" : "text";
+      field.className = "free";
+      field.id = "in-" + q.id;
+      field.name = q.id;
+      if (q.placeholder) field.placeholder = q.placeholder;
+      field.setAttribute("aria-label", q.label);
+      if (q.type === "email") field.autocomplete = "email";
+      field.addEventListener("input", () => {
+        answers[q.id] = field.value.trim();
+        box.classList.remove("invalid");
+      });
+      box.appendChild(field);
+    }
+
+    const err = document.createElement("p");
+    err.className = "err";
+    err.textContent = "This one's required.";
+    box.appendChild(err);
+
+    return box;
+  }
+
+  /* ---- render a step ---- */
+  function renderStep() {
+    const step = CONFIG.steps[stepIndex];
+    el("step-title").textContent = step.title;
+    el("step-intro").textContent = step.intro;
+    qBox.innerHTML = "";
+    step.questions.forEach((q) => qBox.appendChild(buildQuestion(q)));
+
+    // restore any previous answers
+    step.questions.forEach((q) => {
+      const saved = answers[q.id];
+      if (!saved) return;
+      const node = document.getElementById("box-" + q.id);
+      if (q.type === "radio" || q.type === "checkbox") {
+        const picked = q.type === "checkbox" ? saved.split(", ") : [saved];
+        node.querySelectorAll("input[type='" + q.type + "']").forEach((i) => {
+          if (i.dataset.other === "1") return;
+          if (picked.includes(i.value)) {
+            i.checked = true;
+            i.closest(".opt").classList.add("checked");
+          }
+        });
+        const known = q.options;
+        const extras = picked.filter((p) => p && !known.includes(p));
+        if (extras.length && q.other) {
+          const otherBox = node.querySelector('input[data-other="1"]');
+          otherBox.checked = true;
+          otherBox.closest(".opt").classList.add("checked");
+          node.querySelector(".other-in").value = extras.join(", ");
+        }
+        enforceCap(q);
+      } else {
+        node.querySelector(".free").value = saved;
+      }
+    });
+
+    refreshVisibility();
+    paintProgress();
+
+    const last = stepIndex === CONFIG.steps.length - 1;
+    el("next").textContent = last ? "Send my answers" : "Continue →";
+    el("back").hidden = stepIndex === 0;
+    el("nav-note").textContent = last
+      ? "Nothing is sent until you press this."
+      : "";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  /* ---- validation ---- */
+  function validateStep() {
+    let firstBad = null;
+    CONFIG.steps[stepIndex].questions.forEach((q) => {
+      if (!visible(q) || !q.required) return;
+      const node = document.getElementById("box-" + q.id);
+      let value = answers[q.id];
+
+      if (q.type === "checkbox") value = readGroup(q).join(", ");
+      if (q.type !== "radio" && q.type !== "checkbox") {
+        value = node.querySelector(".free").value.trim();
+      }
+      answers[q.id] = value;
+
+      let ok = !!value;
+      if (ok && q.type === "email") ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
+      node.classList.toggle("invalid", !ok);
+      if (!ok) {
+        node.querySelector(".err").textContent =
+          q.type === "email" && value ? "That email doesn't look right." : "This one's required.";
+        if (!firstBad) firstBad = node;
+      }
+    });
+    if (firstBad) firstBad.scrollIntoView({ behavior: "smooth", block: "center" });
+    return !firstBad;
+  }
+
+  /* ---- submit ---- */
+  async function submit() {
+    const btn = el("next");
+    const fail = el("sendfail");
+    fail.classList.remove("show");
+    btn.disabled = true;
+    btn.textContent = "Sending…";
+
+    const payload = new URLSearchParams();
+    CONFIG.steps.forEach((s) =>
+      s.questions.forEach((q) => payload.append(q.id, answers[q.id] || ""))
+    );
+    payload.append("submittedAt", new Date().toISOString());
+
+    if (!CONFIG.endpoint) {
+      console.log("Preview mode — nothing sent. Payload:", Object.fromEntries(payload));
+      finish();
+      return;
+    }
+
+    try {
+      const res = await fetch(CONFIG.endpoint, { method: "POST", body: payload });
+      if (!res.ok) throw new Error("bad status");
+      finish();
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = "Send my answers";
+      fail.innerHTML =
+        "That didn't send. Try once more — or email your answers to <a href='mailto:" +
+        CONFIG.contactEmail + "'>" + CONFIG.contactEmail + "</a> and we'll add them.";
+      fail.classList.add("show");
+    }
+  }
+
+  function finish() {
+    el("survey").hidden = true;
+    el("intro").hidden = true;
+    el("progress").hidden = true;
+    el("done").hidden = false;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  /* ---- nav wiring ---- */
+  el("next").addEventListener("click", () => {
+    if (!validateStep()) return;
+    if (stepIndex === CONFIG.steps.length - 1) {
+      submit();
+    } else {
+      stepIndex++;
+      el("intro").hidden = true;
+      renderStep();
+    }
+  });
+
+  el("back").addEventListener("click", () => {
+    if (stepIndex === 0) return;
+    stepIndex--;
+    renderStep();
+  });
+
+  el("survey").addEventListener("submit", (e) => e.preventDefault());
+
+  renderStep();
+})();
+</script>
+</body>
+</html>
