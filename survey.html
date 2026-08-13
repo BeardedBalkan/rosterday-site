@@ -70,20 +70,26 @@
 
   /* ---- masthead ---- */
   .masthead{padding-block:2rem 1.25rem;}
-  .logo{display:flex;align-items:center;gap:.65rem;text-decoration:none;color:inherit;}
-  .logo .tile{
-    width:34px;height:34px;border-radius:var(--r-lg);background:var(--teal-deep);
-    display:flex;align-items:center;justify-content:center;flex:none;
+  .logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;}
+  .mark{
+    width:40px;height:40px;border-radius:12px;
+    background:linear-gradient(160deg,#1F7A8C 0%,#155562 100%);
+    padding:9px;display:flex;flex-direction:column;justify-content:center;gap:4px;flex:none;
   }
-  .logo .tile svg{width:18px;height:18px;}
-  .logo .name{font-family:var(--font-display);font-weight:700;font-size:1.2rem;letter-spacing:-.02em;}
-  .logo .name span{color:var(--pewter);}
+  .mark .row{display:flex;align-items:center;gap:3px;}
+  .mark .dot{width:4px;height:4px;border-radius:50%;background:#F2B544;flex:none;}
+  .mark .dot.off{background:transparent;}
+  .mark .bar{height:3.5px;border-radius:2px;background:#fff;}
+  .mark .bar.b2{background:rgba(255,255,255,.72);}
+  .mark .bar.b3{background:rgba(255,255,255,.48);}
+  .wordmark{font:700 21px "Inter Tight",sans-serif;letter-spacing:-.01em;color:#0E1F26;}
+  .wordmark span{font-weight:500;opacity:.6;}
 
   /* ---- progress ---- */
   .progress{padding-top:clamp(2rem,6vw,3rem);}
   .progress .bar{display:flex;gap:6px;margin-top:.55rem;}
   .progress .seg{flex:1;height:4px;border-radius:var(--r-pill);background:var(--fog);transition:background .3s ease;}
-  .progress .seg.done{background:var(--teal);}
+  .progress .seg.is-filled{background:var(--teal);}
   .progress .meta{
     display:flex;justify-content:space-between;align-items:baseline;gap:1rem;
     font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
@@ -232,16 +238,13 @@
 <body>
 
   <div class="wrap masthead">
-    <a class="logo" href="/">
-      <span class="tile" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="6.3" cy="7" r="1.5" fill="#F7F6F2"/>
-          <rect x="9.6" y="5.8" width="8.4" height="2.4" rx="1.2" fill="#F7F6F2"/>
-          <rect x="4.8" y="10.8" width="13.2" height="2.4" rx="1.2" fill="#F7F6F2"/>
-          <rect x="4.8" y="15.8" width="7.4" height="2.4" rx="1.2" fill="#5DA0AD"/>
-        </svg>
+    <a class="logo" href="/" id="home-link">
+      <span class="mark" aria-hidden="true">
+        <span class="row"><span class="dot"></span><span class="bar" style="width:21px"></span></span>
+        <span class="row"><span class="dot off"></span><span class="bar b2" style="width:16px"></span></span>
+        <span class="row"><span class="dot off"></span><span class="bar b3" style="width:12px"></span></span>
       </span>
-      <span class="name">Roster<span>Day</span></span>
+      <span class="wordmark">Roster<span>Day</span></span>
     </a>
   </div>
 
@@ -312,6 +315,9 @@ const CONFIG = {
     title: "That's it — thank you.",
     body: "Your answers are in. If you asked for the summary, we'll send it through once we've heard from enough clubs."
   },
+
+  /* Shown if someone clicks the logo mid-survey. */
+  leaveWarning: "You haven't finished the survey yet — your answers so far won't be saved. Leave anyway?",
 
   footer: {
     left: "© 2026 RosterDay · Currently in development",
@@ -514,6 +520,14 @@ const CONFIG = {
 (function () {
   const answers = {};
   let stepIndex = 0;
+  let submitted = false;
+
+  /* Warn before leaving with unsaved answers. */
+  document.getElementById("home-link").addEventListener("click", (e) => {
+    const started = Object.values(answers).some((v) => v);
+    if (!started || submitted) return;
+    if (!window.confirm(CONFIG.leaveWarning)) e.preventDefault();
+  });
 
   const el = (id) => document.getElementById(id);
   const qBox = el("questions");
@@ -537,7 +551,7 @@ const CONFIG = {
   });
 
   function paintProgress() {
-    [...bar.children].forEach((s, i) => s.classList.toggle("done", i <= stepIndex));
+    [...bar.children].forEach((s, i) => s.classList.toggle("is-filled", i <= stepIndex));
     el("step-label").textContent = CONFIG.steps[stepIndex].title;
     el("step-count").textContent = "Step " + (stepIndex + 1) + " of " + CONFIG.steps.length;
   }
@@ -836,6 +850,7 @@ const CONFIG = {
   }
 
   function finish() {
+    submitted = true;
     el("survey").hidden = true;
     el("intro").hidden = true;
     el("progress").hidden = true;
