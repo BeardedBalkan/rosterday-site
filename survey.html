@@ -111,6 +111,14 @@
     font-size:.82rem;font-weight:600;padding:.4rem .85rem;border-radius:var(--r-pill);
   }
 
+  .head .closing{
+    display:flex;align-items:center;gap:.55rem;
+    margin:1rem 0 0;padding:.6rem .9rem;
+    background:var(--sun-soft);border-radius:var(--r-lg);
+    color:var(--sun-deep);font-size:.9rem;font-weight:500;
+  }
+  .head .closing svg{width:16px;height:16px;flex:none;}
+
   /* ---- steps ---- */
   .step-head{padding-block:1.5rem 0;}
   .step-head h2{
@@ -254,6 +262,13 @@
       <h1 id="intro-title"></h1>
       <p id="intro-lede"></p>
       <span class="time" id="intro-time"></span>
+      <p class="closing" id="intro-closing">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+        </svg>
+        <span id="intro-closing-text"></span>
+      </p>
     </section>
 
     <form id="survey" novalidate>
@@ -308,7 +323,8 @@ const CONFIG = {
   intro: {
     title: "How does your club actually roster volunteers?",
     lede: "We're talking to grassroots football clubs across NSW about how volunteer rostering really works — what's a pain, what you've tried, what you'd change. Your answers shape what gets built.",
-    time: "About 3 minutes · 14 questions"
+    time: "About 3 minutes · 14 questions",
+    closing: "Responses close 30 September 2026, 11:59pm AEST."
   },
 
   done: {
@@ -536,6 +552,8 @@ const CONFIG = {
   el("intro-title").textContent = CONFIG.intro.title;
   el("intro-lede").textContent = CONFIG.intro.lede;
   el("intro-time").textContent = CONFIG.intro.time;
+  el("intro-closing-text").textContent = CONFIG.intro.closing || "";
+  el("intro-closing").hidden = !CONFIG.intro.closing;
   el("done-title").textContent = CONFIG.done.title;
   el("done-body").textContent = CONFIG.done.body;
   el("foot-left").textContent = CONFIG.footer.left;
