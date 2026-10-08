@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RosterDay - Volunteer Coordination Survey 2026 results</title>
+
+<!-- ============================================================
+     ROSTERDAY - SURVEY RESULTS (UNLISTED PAGE)
+     ------------------------------------------------------------
+     Hosted at /results/volunteer-survey-2026-f3f24cdad41b/
+     Only sent by email to people who opted in to the results.
+
+     Keep it unfindable:
+       - Don't link to this page from any other page.
+       - Don't add it to sitemap.xml or robots.txt.
+       - The _headers file at the site root adds X-Robots-Tag
+         (covers the PDFs too) and Referrer-Policy.
+
+     The two PDFs sit in this same folder, next to this file:
+       RosterDay-Football-Volunteer-Coordination-Survey-2026-Summary.pdf
+       RosterDay-Football-Volunteer-Coordination-Survey-2026-Full-Report.pdf
+     ============================================================ -->
+
+<!-- Search engines, crawlers and AI bots: do not index, follow, cache or snippet -->
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate, noai, noimageai">
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="GPTBot" content="noindex, nofollow">
+<meta name="ChatGPT-User" content="noindex, nofollow">
+<meta name="OAI-SearchBot" content="noindex, nofollow">
+<meta name="ClaudeBot" content="noindex, nofollow">
+<meta name="anthropic-ai" content="noindex, nofollow">
+<meta name="Google-Extended" content="noindex, nofollow">
+<meta name="PerplexityBot" content="noindex, nofollow">
+<meta name="CCBot" content="noindex, nofollow">
+<meta name="Applebot-Extended" content="noindex, nofollow">
+<meta name="Bytespider" content="noindex, nofollow">
+<meta name="meta-externalagent" content="noindex, nofollow">
+<!-- Don't pass this page's URL to any site a reader clicks through to -->
+<meta name="referrer" content="no-referrer">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --teal:#1F7A8C;
+    --teal-deep:#155562;
+    --teal-soft:#E8F1F3;
+    --ivory:#F7F6F2;
+    --cream:#FBF9F4;
+    --ink:#0E1F26;
+    --ink-soft:#1F2F36;
+    --pewter:#74808A;
+    --pewter-deep:#4F5961;
+    --fog:#E4E7E8;
+    --fog-deep:#D2D7D9;
+    --sun:#F2B544;
+    --sun-soft:#FCEFD4;
+    --sun-deep:#9A6E12;
+    --green:#4FA67A;
+    --green-soft:#E1EFE6;
+
+    --font-display:"Inter Tight", system-ui, sans-serif;
+    --font-body:"Inter", system-ui, sans-serif;
+
+    --r-sm:6px; --r-md:8px; --r-lg:12px; --r-xl:16px; --r-pill:999px;
+    --shadow-1:0 1px 2px rgba(14,31,38,.06);
+    --shadow-2:0 8px 24px rgba(14,31,38,.06);
+    --maxw:720px;
+    --pad:clamp(1.25rem, 5vw, 2.5rem);
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;background:var(--ivory);color:var(--ink);
+    font-family:var(--font-body);font-size:1rem;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    display:flex;flex-direction:column;min-height:100vh;
+  }
+  a{color:var(--teal);}
+  ::selection{background:var(--teal);color:#fff;}
+
+  .wrap{width:100%;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad);}
+
+  /* ---- masthead (identical to survey page) ---- */
+  .masthead{padding-block:2rem 1.25rem;}
+  .logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;}
+  .mark{
+    width:40px;height:40px;border-radius:12px;
+    background:linear-gradient(160deg,#1F7A8C 0%,#155562 100%);
+    padding:9px;display:flex;flex-direction:column;justify-content:center;gap:4px;flex:none;
+  }
+  .mark .row{display:flex;align-items:center;gap:3px;}
+  .mark .dot{width:4px;height:4px;border-radius:50%;background:#F2B544;flex:none;}
+  .mark .dot.off{background:transparent;}
+  .mark .bar{height:3.5px;border-radius:2px;background:#fff;}
+  .mark .bar.b2{background:rgba(255,255,255,.72);}
+  .mark .bar.b3{background:rgba(255,255,255,.48);}
+  .wordmark{font:700 21px "Inter Tight",sans-serif;letter-spacing:-.01em;color:#0E1F26;}
+  .wordmark span{font-weight:500;opacity:.6;}
+
+  /* ---- head ---- */
+  main{flex:1 0 auto;}
+  .head{padding-block:clamp(2rem,6vw,3rem) 0;}
+  .status{
+    display:inline-flex;align-items:center;gap:.55rem;
+    background:var(--green-soft);color:#2E6B4C;
+    font-size:.82rem;font-weight:600;padding:.4rem .85rem;border-radius:var(--r-pill);
+    margin-bottom:1.1rem;
+  }
+  .status svg{width:15px;height:15px;flex:none;}
+  .head h1{
+    font-family:var(--font-display);font-weight:700;
+    font-size:clamp(1.9rem,1.4rem + 2vw,2.6rem);line-height:1.12;letter-spacing:-.02em;margin:0;
+    text-wrap:balance;
+  }
+  /* each sentence on its own line; long ones wrap evenly on phones */
+  .head h1 span{display:block;}
+  .head p{margin:1rem 0 0;color:var(--pewter-deep);font-size:1.05rem;}
+  .head p.lede{font-size:1.12rem;color:var(--ink-soft);text-wrap:pretty;}
+
+  /* ---- the two options ---- */
+  .options{
+    display:grid;gap:1rem;grid-template-columns:1fr;
+    margin-top:clamp(2rem,5vw,2.75rem);
+  }
+  /* minmax(0,1fr) forces two exactly equal columns, whatever the text inside */
+  @media (min-width:640px){ .options{grid-template-columns:repeat(2, minmax(0, 1fr));} }
+
+  .option{
+    background:#fff;border:1px solid var(--fog);border-radius:var(--r-xl);
+    padding:clamp(1.4rem,4vw,1.75rem);box-shadow:var(--shadow-2);
+    display:flex;flex-direction:column;
+  }
+  .icon{
+    width:44px;height:44px;border-radius:var(--r-lg);
+    background:var(--teal-soft);color:var(--teal-deep);
+    display:flex;align-items:center;justify-content:center;flex:none;
+  }
+  .icon svg{width:22px;height:22px;}
+  .option h2{
+    font-family:var(--font-display);font-weight:700;
+    font-size:1.3rem;letter-spacing:-.015em;margin:1rem 0 0;line-height:1.25;
+  }
+  .meta{
+    margin:.4rem 0 0;font-size:.8rem;font-weight:600;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--teal);
+  }
+  .option p.desc{margin:.75rem 0 0;color:var(--pewter-deep);font-size:.97rem;flex:1 0 auto;}
+
+  .actions{margin-top:1.4rem;display:flex;flex-direction:column;align-items:flex-start;gap:.6rem;}
+  .btn{
+    display:inline-flex;align-items:center;gap:.5rem;
+    font-family:var(--font-body);font-size:1rem;font-weight:600;text-decoration:none;
+    padding:.8rem 1.3rem;border-radius:var(--r-lg);border:1.5px solid transparent;
+    background:var(--teal-deep);color:#fff;
+    transition:background .15s ease, transform .15s ease;
+  }
+  .btn:hover{background:var(--teal);transform:translateY(-1px);}
+  .btn:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+  .btn svg{width:16px;height:16px;flex:none;}
+  .dl{font-size:.9rem;font-weight:500;color:var(--pewter-deep);text-decoration:none;}
+  .dl:hover{color:var(--teal-deep);text-decoration:underline;}
+  .dl:focus-visible{outline:2px solid var(--teal);outline-offset:2px;border-radius:4px;}
+
+  /* ---- sharing note ---- */
+  .next{
+    margin-top:clamp(1.75rem,4vw,2.25rem);padding:1.1rem 1.25rem;
+    background:var(--teal-soft);border-radius:var(--r-lg);
+    color:var(--teal-deep);font-size:.97rem;
+  }
+  .next strong{font-family:var(--font-display);font-weight:600;display:block;margin-bottom:.3rem;}
+
+  .closing{margin:1.5rem 0 0;color:var(--pewter-deep);font-size:.97rem;}
+  .closing a{font-weight:500;}
+
+  /* ---- footer ---- */
+  .foot{
+    flex-shrink:0;border-top:1px solid var(--fog);margin-top:clamp(2.5rem,7vw,4rem);
+    padding-block:1.5rem 2.5rem;font-size:.85rem;color:var(--pewter);
+    display:flex;flex-wrap:wrap;gap:.4rem 1.5rem;justify-content:space-between;
+  }
+  .foot a{text-decoration:none;font-weight:500;}
+  .foot a:hover{text-decoration:underline;}
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important;}
+    .btn:hover{transform:none;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="wrap masthead">
+    <a class="logo" href="https://rosterday.com.au/" rel="noreferrer">
+      <span class="mark" aria-hidden="true">
+        <span class="row"><span class="dot"></span><span class="bar" style="width:21px"></span></span>
+        <span class="row"><span class="dot off"></span><span class="bar b2" style="width:16px"></span></span>
+        <span class="row"><span class="dot off"></span><span class="bar b3" style="width:12px"></span></span>
+      </span>
+      <span class="wordmark">Roster<span>Day</span></span>
+    </a>
+  </div>
+
+  <main class="wrap">
+
+    <section class="head">
+      <span class="status">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"></circle><path d="m8 12 3 3 5-6"></path>
+        </svg>
+        <span>Survey results · October 2026</span>
+      </span>
+      <h1><span>The survey results are in.</span> <span>Here's your copy.</span></h1>
+      <p class="lede">Thank you for taking part in the volunteer coordination survey. Grassroots football clubs told us how they roster volunteers, what they've tried and where it falls over. This is what they said.</p>
+      <p>There are two ways to read it. Start with the slide deck for the key findings, or go to the full report for the detail.</p>
+    </section>
+
+    <section class="options" aria-label="Survey results documents">
+
+      <article class="option">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M12 16v4"></path><path d="M8 20h8"></path><path d="M7 12l3-3 2 2 4-4"></path>
+          </svg>
+        </span>
+        <h2>Summary slide deck</h2>
+        <p class="meta">PDF · 15 slides</p>
+        <p class="desc">The key findings in a short visual deck, laid out so you can put it up at your next committee meeting.</p>
+        <div class="actions">
+          <a class="btn" href="RosterDay-Football-Volunteer-Coordination-Survey-2026-Summary.pdf" target="_blank" rel="noopener noreferrer">
+            View the slide deck
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg>
+          </a>
+          <a class="dl" href="RosterDay-Football-Volunteer-Coordination-Survey-2026-Summary.pdf" download>Download</a>
+        </div>
+      </article>
+
+      <article class="option">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5"></path><path d="M9 13h6"></path><path d="M9 17h6"></path>
+          </svg>
+        </span>
+        <h2>Full report</h2>
+        <p class="meta">PDF · 64 pages</p>
+        <p class="desc">Every question covered in detail, with the full breakdown of responses behind each finding in the summary.</p>
+        <div class="actions">
+          <a class="btn" href="RosterDay-Football-Volunteer-Coordination-Survey-2026-Full-Report.pdf" target="_blank" rel="noopener noreferrer">
+            Read the full report
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg>
+          </a>
+          <a class="dl" href="RosterDay-Football-Volunteer-Coordination-Survey-2026-Full-Report.pdf" download>Download</a>
+        </div>
+      </article>
+
+    </section>
+
+    <div class="next">
+      <strong>Sharing it with your club</strong>
+      You're welcome to pass both PDFs on to your committee and volunteers. Please don't post this page's link publicly, as it was sent only to people who asked for the results.
+    </div>
+
+    <p class="closing">Questions, or something in the results you'd like to talk through? Reply to the email this came in, or write to <a href="mailto:hello@rosterday.com.au">hello@rosterday.com.au</a>.</p>
+
+  </main>
+
+  <footer class="wrap foot">
+    <span>© 2026 RosterDay · Currently in development</span>
+    <a href="mailto:hello@rosterday.com.au">hello@rosterday.com.au</a>
+  </footer>
+
+</body>
+</html>

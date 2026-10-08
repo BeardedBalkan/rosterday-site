@@ -1,0 +1,13 @@
+# Cloudflare Pages custom headers
+# Place this file at the ROOT of your Pages project (next to the home page index.html).
+# If you already have a _headers file, add these two blocks to it.
+
+# Unlisted survey results page AND the PDFs in its folder.
+# Meta tags only work inside HTML; this header also stops the PDFs being indexed.
+/results/volunteer-survey-2026-f3f24cdad41b
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet, noimageindex
+  Referrer-Policy: no-referrer
+
+/results/volunteer-survey-2026-f3f24cdad41b/*
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet, noimageindex
+  Referrer-Policy: no-referrer
